@@ -71,3 +71,9 @@ DROP table people_li, city_li
 -- 5. Create a stored procedure “sp_birthday_employees_[you_last_name]” that creates a new table “birthday_employees_your_last_name” and fill it with all employees that have a birthday on Feb. (Make a screen shot) drop the table. Employee table should not be affected.
 
 -- 6. How do you make sure two tables have the same data?
+
+SELECT * FROM Table1
+UNION
+SELECT * FROM Table2
+
+If records is the same number of each table, they don't have same data.
