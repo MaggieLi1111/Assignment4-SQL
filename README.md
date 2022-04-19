@@ -14,7 +14,37 @@ select * from view_product_order_li
 -- 2. Create a stored procedure “sp_product_order_quantity_[your_last_name]” that accept product id as an input 
 -- and total quantities of order as output parameter.
 
+ALTER PROC sp_Product_Order_Quantity_Gaddam
+@ProductID INT,
+@TotalOrderQty INT OUT
+AS
+BEGIN
+SELECT @TotalOrderQty = SUM(Quantity)  FROM [Order Details] OD JOIN Products P ON P.ProductID = OD.ProductID
+WHERE P.ProductID = @ProductID
+END
+
+
+
+DECLARE @Tot INT
+EXEC sp_Product_Order_Quantity_Gaddam 11,@Tot OUT
+PRINT @Tot 
+
+
 -- 3. Create a stored procedure “sp_product_order_city_[your_last_name]” that accept product name as an input and top 5 cities that ordered most that product combined with the total quantity of that product ordered from that city as output.
+
+
+ALTER PROC sp_Product_Order_City_Gaddam
+@ProductName NVARCHAR(50)
+AS
+BEGIN
+SELECT TOP 5 ShipCity,SUM(Quantity) FROM [Order Details] OD JOIN Products P ON P.ProductID = OD.ProductID JOIN Orders O ON O.OrderID = OD.OrderID
+WHERE ProductName=@ProductName
+GROUP BY ProductName,ShipCity
+ORDER BY SUM(Quantity) DESC
+END
+
+
+EXEC sp_Product_Order_City_Gaddam 'Queso Cabrales'
 
 
 -- 4. Create 2 new tables “people_your_last_name” “city_your_last_name”. 
@@ -69,6 +99,15 @@ DROP table people_li, city_li
 
 
 -- 5. Create a stored procedure “sp_birthday_employees_[you_last_name]” that creates a new table “birthday_employees_your_last_name” and fill it with all employees that have a birthday on Feb. (Make a screen shot) drop the table. Employee table should not be affected.
+
+ALTER PROC sp_birthday_employee_gaddam
+AS
+BEGIN
+SELECT * INTO #EmployeeTemp
+FROM Employees WHERE DATEPART(MM,BirthDate) = 02
+SELECT * FROM #EmployeeTemp
+END
+
 
 -- 6. How do you make sure two tables have the same data?
 
