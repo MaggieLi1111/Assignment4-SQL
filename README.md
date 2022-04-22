@@ -15,20 +15,22 @@ select * from view_product_order_li
 -- 2. Create a stored procedure “sp_product_order_quantity_[your_last_name]” that accept product id as an input 
 -- and total quantities of order as output parameter.
 
-ALTER PROC sp_Product_Order_Quantity_Gaddam
-@ProductID INT,
-@TotalOrderQty INT OUT
+
+Create Procedure sp_product_order_quantity_li
+@ProductID int,
+@TotalQuantities int out
 AS
-BEGIN
-SELECT @TotalOrderQty = SUM(Quantity)  FROM [Order Details] OD JOIN Products P ON P.ProductID = OD.ProductID
-WHERE P.ProductID = @ProductID
-END
+Begin 
+Select @TotalQuantities = sum(quantity) 
+from [Order Details] od join Products p on od.ProductID = p.ProductID
+where p.ProductID = @ProductID
+print @totalQuantities
+end
+
+DECLARE @real int
+EXECUTE dbo.sp_product_order_quantity_li 2, @real out
 
 
-
-DECLARE @Tot INT
-EXEC sp_Product_Order_Quantity_Gaddam 11,@Tot OUT
-PRINT @Tot 
 
 
 -- 3. Create a stored procedure “sp_product_order_city_[your_last_name]” that accept product name as an input and top 5 cities that ordered most that product combined with the total quantity of that product ordered from that city as output.
