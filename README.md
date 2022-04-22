@@ -59,50 +59,50 @@ execute sp_Product_order_city_li 'chang'
 -- Create a view “Packers_your_name” lists all people from Green Bay. 
 -- If any error occurred, no changes should be made to DB. (after test) Drop both tables and view.
 
-create view view_product_order_li
-as
-select p.ProductName, count(od.ProductID) as totoal
-from products p join [Order Details] od on od.ProductID = p.ProductID
-Group by p.ProductName
 
-select * from view_product_order_li
 
-create table city_li
+CREATE TABLE People_Gaddam
 (
-id int,
-city varchar(20)
-)
-
-
-insert into city_li (id, city)
-values (2,'Green bay'), (1,'Seattle')
-
-create table people_li
-(
-id int,
-[name] varchar(20),
+id int ,
+name nvarchar(100),
 city int
 )
 
-insert into people_li (id, [name], city)
-values (1, 'Aaron Rodgers', 2), (2, 'Russell Wilson', 1), (3,'Jody Nelson', 2)
+create table City_Gaddam
+(
+id int,
+city nvarchar(100)
+)
+BEGIN TRAN 
+insert into City_Gaddam values(1,'Seattle')
+insert into City_Gaddam values(2,'Green Bay')
 
+insert into People_Gaddam values(1,'Aaron Rodgers',1)
+insert into People_Gaddam values(2,'Russell Wilson',2)
+insert into People_Gaddam values(3,'Jody Nelson',2)
 
-update city_li 
+if exists(select id from People_Gaddam where city = (select id from City_Gaddam where city = 'Seatle'))
+begin
+insert into City_Gaddam values(3,'Madison')
+update People_Gaddam
 set city = 'Madison'
-where city = 'Seattle'
+where id in (select id from People_Gaddam where city = (select id from City_Gaddam where city = 'Seatle'))
+end
+delete from City_Gaddam where city = 'Seattle'
 
-create view Packers_DanyangLi
-as
-select c.city, p.[name]
-from city_li c left join people_li p on c.id = p.city
-where c.city = 'green bay'
+CREATE VIEW Packers_Gaddam
+AS
+SELECT name FROM People_Gaddam WHERE city = 'Green Bay'
 
-DROP table people_li, city_li
-
+select * from Packers_Gaddam
+commit
+drop table People_Gaddam
+drop table City_Gaddam
+drop view Packers_Gaddam
 
 
 -- 5. Create a stored procedure “sp_birthday_employees_[you_last_name]” that creates a new table “birthday_employees_your_last_name” and fill it with all employees that have a birthday on Feb. (Make a screen shot) drop the table. Employee table should not be affected.
+
 
 ALTER PROC sp_birthday_employee_gaddam
 AS
