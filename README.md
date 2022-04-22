@@ -115,8 +115,8 @@ END
 
 -- 6. How do you make sure two tables have the same data?
 
-SELECT * FROM Table1
-UNION
-SELECT * FROM Table2
+USE EXCEPT KEYWORD
 
-If records is the same number of each table, they don't have same data.
+SELECT * FROM Customers
+EXCEPT
+SELECT * FROM Customers
