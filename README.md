@@ -36,18 +36,19 @@ EXECUTE dbo.sp_product_order_quantity_li 2, @real out
 -- 3. Create a stored procedure “sp_product_order_city_[your_last_name]” that accept product name as an input and top 5 cities that ordered most that product combined with the total quantity of that product ordered from that city as output.
 
 
-ALTER PROC sp_Product_Order_City_Gaddam
-@ProductName NVARCHAR(50)
-AS
-BEGIN
-SELECT TOP 5 ShipCity,SUM(Quantity) FROM [Order Details] OD JOIN Products P ON P.ProductID = OD.ProductID JOIN Orders O ON O.OrderID = OD.OrderID
-WHERE ProductName=@ProductName
-GROUP BY ProductName,ShipCity
-ORDER BY SUM(Quantity) DESC
-END
+create procedure sp_Product_order_city_li 
+@ProductName nvarchar(50)
+as 
+begin 
+select top 5 ShipCity, sum(Quantity) as total
+from orders o join [Order Details] od on o.OrderID = od.OrderID join products p on p.ProductID = od.ProductID
+where ProductName = @ProductName
+group by shipcity
+order by total desc
+end
 
 
-EXEC sp_Product_Order_City_Gaddam 'Queso Cabrales'
+execute sp_Product_order_city_li 'chang'
 
 
 -- 4. Create 2 new tables “people_your_last_name” “city_your_last_name”. 
